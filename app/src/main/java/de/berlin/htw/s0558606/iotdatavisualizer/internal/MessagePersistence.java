@@ -137,7 +137,7 @@ public class MessagePersistence extends SQLiteOpenHelper implements BaseColumns 
         SQLiteDatabase db = getWritableDatabase();
 
         //insert the values into the tables, returns the ID for the row
-        long newRowId = db.insert(message.getTopic(), null, getValues(message));
+        long newRowId = db.insert(message.getTopic().replace("/", "_"), null, getValues(message));
 
         db.close(); //close the db then deal with the result of the query
 
@@ -149,10 +149,11 @@ public class MessagePersistence extends SQLiteOpenHelper implements BaseColumns 
     }
 
     private ContentValues getValues(ReceivedMessage message) {
-        String stringMessage = message.getMessage().getPayload().toString();
+        String stringMessage = new String(message.getMessage().getPayload());
 
         // timestamp wird in bestimmtes format gebracht
-        SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS.SSS");
+        SimpleDateFormat formatter = new SimpleDateFormat();
+        formatter.applyPattern("yyyy-MM-DD HH:mm:ss");
         String timestamp = formatter.format(message.getTimestamp());
 
         ContentValues values = new ContentValues();

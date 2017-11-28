@@ -171,7 +171,7 @@ public class Connection {
                 clientId +
                 " created";
 
-        messagePersistence = new MessagePersistence(context, clientHandle + ".db");
+        messagePersistence = new MessagePersistence(context, clientId + ".db");
         addAction(sb);
     }
 
@@ -401,7 +401,7 @@ public class Connection {
             ConnectionPersistence connectionPersistence = new ConnectionPersistence(context);
             connectionPersistence.deleteSubscription(subscription);
 
-            messagePersistence.deleteTable(subscription.getTopic());
+            messagePersistence.deleteTable(subscription.getTopic().replace("/", "_"));
         }
 
     }
@@ -427,10 +427,9 @@ public class Connection {
         messageHistory.add(0, msg);
         if(subscriptions.containsKey(topic)){
             subscriptions.get(topic).setLastMessage(new String(message.getPayload()));
-
+            System.out.println("Message arrived " + message);
             try {
                 messagePersistence.persistMessage(msg);
-                Log.d("Test", "Message persisted");
             } catch (PersistenceException e) {
                 e.printStackTrace();
             }
