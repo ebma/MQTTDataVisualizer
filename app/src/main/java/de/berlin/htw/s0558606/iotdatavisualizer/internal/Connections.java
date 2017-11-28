@@ -36,8 +36,8 @@ public class Connections {
     /** List of {@link Connection} object **/
     private HashMap<String, Connection> connections = null;
 
-    /** {@link Persistence} object used to save, delete and restore connections**/
-    private Persistence persistence = null;
+    /** {@link ConnectionPersistence} object used to save, delete and restore connections**/
+    private ConnectionPersistence connectionPersistence = null;
 
     /**
      * Create a Connections object
@@ -47,9 +47,9 @@ public class Connections {
         connections = new HashMap<String, Connection>();
 
         // If there is state, attempt to restore it
-        persistence = new Persistence(context);
+        connectionPersistence = new ConnectionPersistence(context);
         try {
-            List<Connection> connectionList = persistence.restoreConnections(context);
+            List<Connection> connectionList = connectionPersistence.restoreConnections(context);
             for(Connection connection : connectionList) {
                 System.out.println("Connection was persisted.." + connection.handle());
                 connections.put(connection.handle(), connection);
@@ -88,7 +88,7 @@ public class Connections {
     public void addConnection(Connection connection){
         connections.put(connection.handle(), connection);
         try{
-            persistence.persistConnection(connection);
+            connectionPersistence.persistConnection(connection);
         } catch (PersistenceException e){
             // @todo Handle this error more appropriately
             //error persisting well lets just swallow this
@@ -124,7 +124,7 @@ public class Connections {
      */
     public void removeConnection(Connection connection){
         connections.remove(connection.handle());
-        persistence.deleteConnection(connection);
+        connectionPersistence.deleteConnection(connection);
     }
 
 
@@ -135,7 +135,7 @@ public class Connections {
      */
     public void updateConnection(Connection connection){
         connections.put(connection.handle(), connection);
-        persistence.updateConnection(connection);
+        connectionPersistence.updateConnection(connection);
     }
 
 

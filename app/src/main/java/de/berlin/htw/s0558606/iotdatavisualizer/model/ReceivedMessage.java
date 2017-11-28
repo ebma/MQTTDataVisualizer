@@ -36,4 +36,5 @@ public class ReceivedMessage {
                 ", timestamp=" + timestamp +
                 '}';
     }
+
 }

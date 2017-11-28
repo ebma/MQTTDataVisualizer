@@ -117,7 +117,7 @@ public class PublishFragment extends Fragment {
         publishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("Publising: [topic: " + topic + ", message: " + message + ", QoS: " + selectedQos + ", Retain: " + retainValue + "]");
+                System.out.println("Publishing: [topic: " + topic + ", message: " + message + ", QoS: " + selectedQos + ", Retain: " + retainValue + "]");
                 ((MainActivity) getActivity()).publish(connection, topic, message, selectedQos, retainValue);
 
 

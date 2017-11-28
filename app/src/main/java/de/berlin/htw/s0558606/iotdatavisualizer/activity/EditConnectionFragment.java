@@ -57,7 +57,7 @@ public class EditConnectionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -81,20 +81,15 @@ public class EditConnectionFragment extends Fragment {
         lwtRetain = (Switch) rootView.findViewById(R.id.retain_switch);
 
 
-
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.qos_options, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         lwtQos.setAdapter(adapter);
 
 
-
-
-
-
-        if(this.getArguments() != null && this.getArguments().getString(ActivityConstants.CONNECTION_KEY) != null){
+        if (this.getArguments() != null && this.getArguments().getString(ActivityConstants.CONNECTION_KEY) != null) {
             /** This Form is referencing an existing connection. **/
             //this.getArguments().getString(ActivityConstants.CONNECTION_KEY)
-            Map<String, Connection> connections =  Connections.getInstance(this.getActivity())
+            Map<String, Connection> connections = Connections.getInstance(this.getActivity())
                     .getConnections();
             String connectionKey = this.getArguments().getString(ActivityConstants.CONNECTION_KEY);
             Connection connection = connections.get(connectionKey);
@@ -119,8 +114,8 @@ public class EditConnectionFragment extends Fragment {
         return rootView;
     }
 
-    private void setFormItemListeners(){
-       clientId.addTextChangedListener(new TextWatcher() {
+    private void setFormItemListeners() {
+        clientId.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -303,7 +298,7 @@ public class EditConnectionFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                    formModel.setLwtTopic(s.toString());
+                formModel.setLwtTopic(s.toString());
             }
         });
         lwtMessage.addTextChangedListener(new TextWatcher() {
@@ -347,7 +342,7 @@ public class EditConnectionFragment extends Fragment {
     private void populateFromConnectionModel(ConnectionModel connectionModel) {
         clientId.setText(connectionModel.getClientId());
         serverHostname.setText(connectionModel.getServerHostName());
-       serverPort.setText(Integer.toString(connectionModel.getServerPort()));
+        serverPort.setText(Integer.toString(connectionModel.getServerPort()));
         cleanSession.setChecked(connectionModel.isCleanSession());
         username.setText(connectionModel.getUsername());
         password.setText(connectionModel.getPassword());
@@ -361,13 +356,13 @@ public class EditConnectionFragment extends Fragment {
         lwtRetain.setChecked(connectionModel.isLwtRetain());
     }
 
-    private void saveConnection(){
+    private void saveConnection() {
         System.out.println("SAVING CONNECTION");
         System.out.println(formModel.toString());
-        if(newConnection){
+        if (newConnection) {
             // Generate a new Client Handle
             StringBuilder sb = new StringBuilder(length);
-            for (int i = 0; i < length; i++){
+            for (int i = 0; i < length; i++) {
                 sb.append(AB.charAt(random.nextInt(AB.length())));
             }
             String clientHandle = sb.toString() + '-' + formModel.getServerHostName() + '-' + formModel.getClientId();

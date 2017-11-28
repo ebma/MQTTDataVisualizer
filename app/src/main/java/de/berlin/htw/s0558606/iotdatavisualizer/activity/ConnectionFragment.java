@@ -54,15 +54,16 @@ public class ConnectionFragment extends Fragment {
         mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
         // Add a tab to the tabHost
         mTabHost.addTab(mTabHost.newTabSpec("History").setIndicator("History"), HistoryFragment.class, bundle);
-        mTabHost.addTab(mTabHost.newTabSpec("Publish").setIndicator("Publish"), PublishFragment.class, bundle);
         mTabHost.addTab(mTabHost.newTabSpec("Subscribe").setIndicator("Subscribe"), SubscriptionFragment.class, bundle);
+        mTabHost.addTab(mTabHost.newTabSpec("Graph").setIndicator("Graph"), GraphFragment.class, bundle);
+
         return rootView;
 
     }
 
     private void changeConnectedState(boolean state){
-        mTabHost.getTabWidget().getChildTabViewAt(1).setEnabled(state);
-        mTabHost.getTabWidget().getChildTabViewAt(2).setEnabled(state);
+        //mTabHost.getTabWidget().getChildTabViewAt(1).setEnabled(state);
+        //mTabHost.getTabWidget().getChildTabViewAt(2).setEnabled(state);
         connectSwitch.setChecked(state);
     }
 

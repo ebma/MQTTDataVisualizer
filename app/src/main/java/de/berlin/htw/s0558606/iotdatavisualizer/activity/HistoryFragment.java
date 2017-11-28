@@ -39,7 +39,7 @@ public class HistoryFragment extends Fragment {
         System.out.println("History Fragment: " + connection.getId());
         setHasOptionsMenu(true);
         messages = connection.getMessages();
-        connection.addReceivedMessageListner(new IReceivedMessageListener() {
+        connection.addReceivedMessageListener(new IReceivedMessageListener() {
             @Override
             public void onMessageReceived(ReceivedMessage message) {
                 System.out.println("GOT A MESSAGE in history " + new String(message.getMessage().getPayload()));
@@ -47,11 +47,6 @@ public class HistoryFragment extends Fragment {
                 messageListAdapter.notifyDataSetChanged();
             }
         });
-
-
-
-
-
     }
 
     @Override
@@ -76,9 +71,6 @@ public class HistoryFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return rootView;
-
-
-
 
     }
 

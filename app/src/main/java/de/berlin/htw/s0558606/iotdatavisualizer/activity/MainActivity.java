@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -157,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
 
             // Set Toolbar Title
             getSupportActionBar().setTitle(title);
-
 
         }
     }
@@ -318,6 +318,28 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         } catch( MqttException ex){
             Log.e(TAG, "Exception occurred during publish: " + ex.getMessage());
         }
+    }
+
+    /**
+     * Opens addgraph fragment
+     * @param item
+     */
+    public void onAddGraphClicked(MenuItem item) {
+        AddGraphFragment addGraphFragment = new AddGraphFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container_body, addGraphFragment);
+        fragmentTransaction.addToBackStack(addGraphFragment.getTag());
+        fragmentTransaction.commit();
+
+    }
+
+    /**
+     * Saves graph and returns to connectionfragment
+     */
+    public void onGraphSaved(){
+        // TODO save Graph
+        getSupportFragmentManager().popBackStackImmediate();
     }
 
     /**

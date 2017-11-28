@@ -45,7 +45,6 @@ public class FragmentDrawer extends Fragment {
         NavDrawerItem navItem = new NavDrawerItem(connection);
         data.add(navItem);
         adapter.notifyDataSetChanged();
-
     }
 
     public void updateConnection(Connection connection) {

@@ -3,8 +3,8 @@ package de.berlin.htw.s0558606.iotdatavisualizer.internal;
 import de.berlin.htw.s0558606.iotdatavisualizer.activity.Connection;
 
 /**
- * Persistence Exception, defines an error with persisting a {@link Connection}
- * fails. Example operations are {@link Persistence#persistConnection(Connection)} and {@link Persistence#restoreConnections(android.content.Context)};
+ * ConnectionPersistence Exception, defines an error with persisting a {@link Connection}
+ * fails. Example operations are {@link ConnectionPersistence#persistConnection(Connection)} and {@link ConnectionPersistence#restoreConnections(android.content.Context)};
  * these operations throw this exception to indicate unexpected results occurred when performing actions on the database.
  *
  */

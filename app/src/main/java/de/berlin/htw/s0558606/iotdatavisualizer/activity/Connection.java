@@ -3,6 +3,7 @@ package de.berlin.htw.s0558606.iotdatavisualizer.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -20,7 +21,8 @@ import java.util.Map;
 
 import de.berlin.htw.s0558606.iotdatavisualizer.R;
 import de.berlin.htw.s0558606.iotdatavisualizer.internal.IReceivedMessageListener;
-import de.berlin.htw.s0558606.iotdatavisualizer.internal.Persistence;
+import de.berlin.htw.s0558606.iotdatavisualizer.internal.ConnectionPersistence;
+import de.berlin.htw.s0558606.iotdatavisualizer.internal.MessagePersistence;
 import de.berlin.htw.s0558606.iotdatavisualizer.internal.PersistenceException;
 import de.berlin.htw.s0558606.iotdatavisualizer.model.ReceivedMessage;
 import de.berlin.htw.s0558606.iotdatavisualizer.model.Subscription;
@@ -70,8 +72,10 @@ public class Connection {
     /** True if this connection is secured using TLS **/
     private boolean tlsConnection = true;
 
-    /** Persistence id, used by {@link Persistence} **/
+    /** ConnectionPersistence id, used by {@link ConnectionPersistence} **/
     private long persistenceId = -1;
+
+    private MessagePersistence messagePersistence;
 
 
     /** The list of this connection's subscriptions **/
@@ -166,6 +170,8 @@ public class Connection {
         String sb = "Client: " +
                 clientId +
                 " created";
+
+        messagePersistence = new MessagePersistence(context, clientHandle + ".db");
         addAction(sb);
     }
 
@@ -373,11 +379,13 @@ public class Connection {
                 final ActionListener callback = new ActionListener(this.context,
                         ActionListener.Action.SUBSCRIBE, this, actionArgs);
                 this.getClient().subscribe(subscription.getTopic(), subscription.getQos(), null, callback);
-                Persistence persistence = new Persistence(context);
+                ConnectionPersistence connectionPersistence = new ConnectionPersistence(context);
 
-                long rowId = persistence.persistSubscription(subscription);
+                long rowId = connectionPersistence.persistSubscription(subscription);
                 subscription.setPersistenceId(rowId);
                 subscriptions.put(subscription.getTopic(), subscription);
+
+                messagePersistence.createTable(subscription.getTopic().replace("/", "_"));
             } catch (PersistenceException pe){
                 throw new MqttException(pe);
             }
@@ -390,8 +398,10 @@ public class Connection {
         if(subscriptions.containsKey(subscription.getTopic())){
             this.getClient().unsubscribe(subscription.getTopic());
             subscriptions.remove(subscription.getTopic());
-            Persistence persistence = new Persistence(context);
-            persistence.deleteSubscription(subscription);
+            ConnectionPersistence connectionPersistence = new ConnectionPersistence(context);
+            connectionPersistence.deleteSubscription(subscription);
+
+            messagePersistence.deleteTable(subscription.getTopic());
         }
 
     }
@@ -408,7 +418,7 @@ public class Connection {
         return subs;
     }
 
-    public void addReceivedMessageListner(IReceivedMessageListener listener){
+    public void addReceivedMessageListener(IReceivedMessageListener listener){
         receivedMessageListeners.add(listener);
     }
 
@@ -417,6 +427,14 @@ public class Connection {
         messageHistory.add(0, msg);
         if(subscriptions.containsKey(topic)){
             subscriptions.get(topic).setLastMessage(new String(message.getPayload()));
+
+            try {
+                messagePersistence.persistMessage(msg);
+                Log.d("Test", "Message persisted");
+            } catch (PersistenceException e) {
+                e.printStackTrace();
+            }
+
             if(subscriptions.get(topic).isEnableNotifications()){
                 //create intent to start activity
                 Intent intent = new Intent();
@@ -431,7 +449,6 @@ public class Connection {
 
                 //notify the user
                 Notify.notifcation(context, context.getString(R.string.notification, notifyArgs), intent, R.string.notifyTitle);
-
             }
         }
 

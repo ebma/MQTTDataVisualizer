@@ -38,7 +38,7 @@ public class MessageListItemAdapter extends ArrayAdapter<ReceivedMessage> {
         TextView dateTextView = (TextView) rowView.findViewById(R.id.message_date_text);
         messageTextView.setText(new String(messages.get(position).getMessage().getPayload()));
         topicTextView.setText(context.getString(R.string.topic_fmt, messages.get(position).getTopic()));
-        DateFormat dateTimeFormatter = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+        DateFormat dateTimeFormatter = SimpleDateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG);
         String shortDateStamp = dateTimeFormatter.format(messages.get(position).getTimestamp());
         dateTextView.setText(context.getString(R.string.message_time_fmt, shortDateStamp));
         return rowView;

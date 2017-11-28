@@ -1,0 +1,119 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="de.berlin.htw.s0558606.iotdatavisualizer.activity.EditConnectionFragment"
+    android:id="@+id/scrollView"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentLeft="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--                    General Settings                     -->
+
+        <TextView
+            android:text="@string/add_graph_general_label"
+            style="@style/HeaderText"
+            android:id="@+id/generalTextView" />
+
+        <LinearLayout
+            android:id="@+id/graph_name_group"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/generalTextView">
+
+            <TextView
+                android:id="@+id/graph_name_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/spinnerTextFieldLabel"
+                android:text="@string/add_graph_name_label"/>
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:layout_marginEnd="30dp"
+                android:ems="10"
+                android:lines="1"
+                android:id="@+id/graph_name"
+                android:text="@string/add_graph_name_default"
+                android:inputType="text"/>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider1"
+            style="@style/Divider"
+            android:layout_below="@+id/graph_name_group" />
+
+
+        <LinearLayout
+            android:id="@+id/graph_topic_group"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider1">
+
+            <TextView
+                android:id="@+id/graph_topic_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/spinnerTextFieldLabel"
+                android:text="@string/add_graph_topic_label"/>
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:layout_marginEnd="30dp"
+                android:ems="10"
+                android:lines="1"
+                android:id="@+id/graph_topic"
+                android:text="@string/add_graph_topic_default"
+                android:inputType="text"/>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider2"
+            style="@style/Divider"
+            android:layout_below="@+id/graph_topic_group" />
+
+        <LinearLayout
+            android:id="@+id/y_axis_group"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider2">
+
+            <TextView
+                android:id="@+id/y_axis_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/spinnerTextFieldLabel"
+                android:text="@string/add_graph_y_label"/>
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:layout_marginEnd="30dp"
+                android:ems="10"
+                android:lines="1"
+                android:id="@+id/graph_y_axis"
+                android:text="@string/add_graph_y_axis_default"/>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider3"
+            style="@style/Divider"
+            android:layout_below="@+id/y_axis_group" />
+
+
+
+    </RelativeLayout>
+</ScrollView>
+
