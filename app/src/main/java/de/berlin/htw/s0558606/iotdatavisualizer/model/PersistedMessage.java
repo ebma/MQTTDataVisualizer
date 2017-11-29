@@ -8,32 +8,36 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Created by marcel on 28.11.17.
- */
 
 public class PersistedMessage {
+
+    // Final Constant for DateFormat
+    public static final String TIMESTAMP_FORMAT = "yyyy-MM-DD HH:mm:ss";
 
     private final String topic;
     private final String message;
     private final Date timestamp;
 
+    private static SimpleDateFormat formatter = new SimpleDateFormat();
+
     public PersistedMessage(String topic, String message, String timestamp) {
         this.topic = topic;
         this.message = message;
+        this.timestamp = getTimestampAsDate(timestamp);
+    }
 
-        String target = "Thu Sep 28 20:29:30 JST 2000";
-        DateFormat df = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.ENGLISH);
-        Date result = null;
-        try {
-            result = df.parse(target);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        System.out.println(result);
+    public PersistedMessage(String topic, String message, Date timestamp) {
+        this.topic = topic;
+        this.message = message;
+        this.timestamp = timestamp;
+    }
 
+    public static PersistedMessage convertToPersistedMessage(ReceivedMessage message){
+        String stringMessage = new String(message.getMessage().getPayload());
 
-        this.timestamp = result;
+        PersistedMessage persistedMessage = new PersistedMessage(message.getTopic(), stringMessage, message.getTimestamp());
+
+        return persistedMessage;
     }
 
 
@@ -47,6 +51,26 @@ public class PersistedMessage {
 
     public Date getTimestamp() {
         return timestamp;
+    }
+
+    public static String getTimestampAsString(Date timestamp){
+        formatter.applyPattern(PersistedMessage.TIMESTAMP_FORMAT);
+
+        String timestampString = formatter.format(timestamp);
+
+        return timestampString;
+    }
+
+    public static Date getTimestampAsDate(String timestamp){
+        formatter.applyPattern(PersistedMessage.TIMESTAMP_FORMAT);
+
+        Date result = null;
+        try {
+            result = formatter.parse(timestamp);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override

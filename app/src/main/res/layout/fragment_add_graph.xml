@@ -41,7 +41,6 @@
                 android:ems="10"
                 android:lines="1"
                 android:id="@+id/graph_name"
-                android:text="@string/add_graph_name_default"
                 android:inputType="text"/>
         </LinearLayout>
 
@@ -73,7 +72,6 @@
                 android:ems="10"
                 android:lines="1"
                 android:id="@+id/graph_topic"
-                android:text="@string/add_graph_topic_default"
                 android:inputType="text"/>
         </LinearLayout>
 
@@ -103,8 +101,7 @@
                 android:layout_marginEnd="30dp"
                 android:ems="10"
                 android:lines="1"
-                android:id="@+id/graph_y_axis"
-                android:text="@string/add_graph_y_axis_default"/>
+                android:id="@+id/graph_y_axis"></EditText>
         </LinearLayout>
 
         <View

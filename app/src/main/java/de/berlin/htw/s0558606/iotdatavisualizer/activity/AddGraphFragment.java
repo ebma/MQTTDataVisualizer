@@ -5,6 +5,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -25,6 +27,8 @@ import java.util.Random;
 
 import de.berlin.htw.s0558606.iotdatavisualizer.R;
 import de.berlin.htw.s0558606.iotdatavisualizer.internal.Connections;
+import de.berlin.htw.s0558606.iotdatavisualizer.internal.Graph;
+import de.berlin.htw.s0558606.iotdatavisualizer.internal.PersistenceException;
 import de.berlin.htw.s0558606.iotdatavisualizer.model.ConnectionModel;
 import de.berlin.htw.s0558606.iotdatavisualizer.model.GraphModel;
 
@@ -38,52 +42,40 @@ public class AddGraphFragment extends Fragment {
     private EditText yAxisDescription;
 
     private GraphModel formModel;
-    private boolean newConnection = true;
+
+    private Connection connection;
 
     private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final Random random = new Random();
     private static final int length = 8;
 
     public AddGraphFragment() {
-        // Required empty public constructor
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Map<String, Connection> connections = Connections.getInstance(this.getActivity())
+                .getConnections();
+        connection = connections.get(this.getArguments().getString(ActivityConstants.CONNECTION_KEY));
+
         setHasOptionsMenu(true);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_add_graph, container, false);
         graphName = (EditText) rootView.findViewById(R.id.graph_name);
         graphTopic = (EditText) rootView.findViewById(R.id.graph_topic);
         yAxisDescription = (EditText) rootView.findViewById(R.id.graph_y_axis);
 
-        /*
-        if (this.getArguments() != null && this.getArguments().getString(ActivityConstants.CONNECTION_KEY) != null) {
-            /** This Form is referencing an existing connection. **/
-            //this.getArguments().getString(ActivityConstants.CONNECTION_KEY)
-            /*Map<String, Connection> connections = Connections.getInstance(this.getActivity())
-                    .getConnections();
-            String connectionKey = this.getArguments().getString(ActivityConstants.CONNECTION_KEY);
-            Connection connection = connections.get(connectionKey);
-            System.out.println("Editing an existing connection: " + connection.handle());
-            newConnection = false;
-            formModel = new GraphModel(graph);
-            System.out.println("Form Model: " + formModel.toString());
-            formModel.setClientHandle(connection.handle());
+        graphName.setText(GraphModel.getDefaultGraphName());
+        graphTopic.setText(GraphModel.getDefaultGraphTopic());
+        yAxisDescription.setText(GraphModel.getDefaultYAxisDescription());
 
-            populateFromConnectionModel(formModel);
+        formModel = new GraphModel();
 
-        } else {
-            formModel = new ConnectionModel();
-            populateFromConnectionModel(formModel);
-
-        }
-        */
         setFormItemListeners();
 
 
@@ -149,44 +141,32 @@ public class AddGraphFragment extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    private void populateFromConnectionModel(ConnectionModel connectionModel) {
-        /*clientId.setText(connectionModel.getClientId());
-        serverHostname.setText(connectionModel.getServerHostName());
-        serverPort.setText(Integer.toString(connectionModel.getServerPort()));
-        cleanSession.setChecked(connectionModel.isCleanSession());
-        username.setText(connectionModel.getUsername());
-        password.setText(connectionModel.getPassword());
-        tlsServerKey.setText(connectionModel.getTlsServerKey());
-        tlsClientKey.setText(connectionModel.getTlsClientKey());
-        timeout.setText(Integer.toString(connectionModel.getTimeout()));
-        keepAlive.setText(Integer.toString(connectionModel.getKeepAlive()));
-        lwtTopic.setText(connectionModel.getLwtTopic());
-        lwtMessage.setText(connectionModel.getLwtMessage());
-        lwtQos.setSelection(connectionModel.getLwtQos());
-        lwtRetain.setChecked(connectionModel.isLwtRetain());*/
+    private void populateFromGraphModel(GraphModel graphModel) {
+        graphName.setText(graphModel.getGraphName());
+        graphTopic.setText(graphModel.getGraphTopic());
+        yAxisDescription.setText(graphModel.getyAxisDescription());
     }
 
-    private void saveConnection() {
-        /*
-        System.out.println("SAVING CONNECTION");
-        System.out.println(formModel.toString());
-        if (newConnection) {
-            // Generate a new Client Handle
-            StringBuilder sb = new StringBuilder(length);
-            for (int i = 0; i < length; i++) {
-                sb.append(AB.charAt(random.nextInt(AB.length())));
-            }
-            String clientHandle = sb.toString() + '-' + formModel.getServerHostName() + '-' + formModel.getClientId();
-            formModel.setClientHandle(clientHandle);
-            ((MainActivity) getActivity()).persistAndConnect(formModel);
+    private void saveGraph() {
+        Graph graph = new Graph(graphName.getText().toString(), graphTopic.getText().toString(), yAxisDescription.getText().toString());
 
-        } else {
-            // Update an existing connection
+        try {
+            connection.getGraphPersistence().persistGraph(graph);
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        }
 
-            ((MainActivity) getActivity()).updateAndConnect(formModel);
-        }*/
+        // switch back to connectionfragment to reload graphes
+        ConnectionFragment fragment = new ConnectionFragment();
 
+        Bundle bundle = new Bundle();
+        bundle.putString(ActivityConstants.CONNECTION_KEY, connection.handle());
+        fragment.setArguments(bundle);
 
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container_body, fragment);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -205,7 +185,7 @@ public class AddGraphFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save_graph) {
-            ((MainActivity) getActivity()).onGraphSaved();
+            saveGraph();
         }
 
         return super.onOptionsItemSelected(item);

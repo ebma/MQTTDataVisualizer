@@ -43,9 +43,6 @@ public class ConnectionFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_connection, container, false);
 
-
-
-
         Bundle bundle = new Bundle();
         bundle.putString(ActivityConstants.CONNECTION_KEY, connection.handle());
 

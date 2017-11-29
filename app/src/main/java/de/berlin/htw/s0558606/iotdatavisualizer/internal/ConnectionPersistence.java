@@ -332,8 +332,6 @@ public class ConnectionPersistence extends SQLiteOpenHelper implements BaseColum
      * @throws PersistenceException if restoring connections fails, this is thrown
      */
     public List<Connection> restoreConnections(Context context) throws PersistenceException {
-
-
         //columns to return
         String[] connectionColumns = {
                 COLUMN_CLIENT_HANDLE,

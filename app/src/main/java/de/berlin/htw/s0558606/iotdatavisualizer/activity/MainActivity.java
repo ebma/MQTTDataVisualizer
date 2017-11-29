@@ -280,8 +280,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     }
 
 
-
-
     public void connect(Connection connection) {
         String[] actionArgs = new String[1];
         actionArgs[0] = connection.getId();
@@ -307,7 +305,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
     }
 
     public void publish(Connection connection, String topic, String message, int qos, boolean retain){
-
         try {
             String[] actionArgs = new String[2];
             actionArgs[0] = message;
@@ -318,28 +315,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         } catch( MqttException ex){
             Log.e(TAG, "Exception occurred during publish: " + ex.getMessage());
         }
-    }
-
-    /**
-     * Opens addgraph fragment
-     * @param item
-     */
-    public void onAddGraphClicked(MenuItem item) {
-        AddGraphFragment addGraphFragment = new AddGraphFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container_body, addGraphFragment);
-        fragmentTransaction.addToBackStack(addGraphFragment.getTag());
-        fragmentTransaction.commit();
-
-    }
-
-    /**
-     * Saves graph and returns to connectionfragment
-     */
-    public void onGraphSaved(){
-        // TODO save Graph
-        getSupportFragmentManager().popBackStackImmediate();
     }
 
     /**

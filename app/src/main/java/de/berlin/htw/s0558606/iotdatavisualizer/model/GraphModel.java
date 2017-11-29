@@ -4,26 +4,14 @@ import de.berlin.htw.s0558606.iotdatavisualizer.activity.Connection;
 import de.berlin.htw.s0558606.iotdatavisualizer.internal.Graph;
 
 /**
- * Created by marcel on 20.11.17.
+ * Created by Marcel Ebert S0558606 on 20.11.17.
  */
 
 public class GraphModel {
 
-    private static final String CLIENT_HANDLE = "CLIENT_HANDLE";
-    private static final String CLIENT_ID = "CLIENT_ID";
-    private static final String HOST_NAME = "HOST_NAME";
-    private static final String PORT = "PORT";
-    private static final String CLEAN_SESSION = "CLEAN_SESSION";
-    private static final String USERNAME = "USERNAME";
-    private static final String PASSWORD = "PASSWORD";
-    private static final String TLS_SERVER_KEY = "TLS_SERVER_KEY";
-    private static final String TLS_CLIENT_KEY = "TLS_CLIENT_KEY";
-    private static final String TIMEOUT = "TIMEOUT";
-    private static final String KEEP_ALIVE = "KEEP_ALIVE";
-    private static final String LWT_TOPIC = "LWT_TOPIC";
-    private static final String LWT_MESSAGE = "LWT_MESSAGE";
-    private static final String LWT_QOS = "LWT_QOS";
-    private static final String LWT_RETAIN = "LWT_RETAIN";
+    private static final String DEFAULT_GRAPH_NAME = "Graph";
+    private static final String DEFAULT_GRAPH_TOPIC = "/iotdata";
+    private static final String DEFAULT_Y_AXIS_DESCRIPTION = "Temperature";
 
 
     private String graphName = "";
@@ -35,7 +23,7 @@ public class GraphModel {
 
     }
 
-    /** Initialise the ConnectionModel with an existing connection **/
+    /** Initialise the GraphModel with an existing connection **/
     public GraphModel(Graph graph){
         graphName = graph.getGraphName();
         graphTopic = graph.getGraphTopic();
@@ -64,5 +52,46 @@ public class GraphModel {
 
     public void setyAxisDescription(String yAxisDescription) {
         this.yAxisDescription = yAxisDescription;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GraphModel that = (GraphModel) o;
+
+        if (!graphName.equals(that.graphName)) return false;
+        if (!graphTopic.equals(that.graphTopic)) return false;
+        return yAxisDescription.equals(that.yAxisDescription);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = graphName.hashCode();
+        result = 31 * result + graphTopic.hashCode();
+        result = 31 * result + yAxisDescription.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "GraphModel{" +
+                "graphName='" + graphName + '\'' +
+                ", graphTopic='" + graphTopic + '\'' +
+                ", yAxisDescription='" + yAxisDescription + '\'' +
+                '}';
+    }
+
+    public static String getDefaultGraphName() {
+        return DEFAULT_GRAPH_NAME;
+    }
+
+    public static String getDefaultGraphTopic() {
+        return DEFAULT_GRAPH_TOPIC;
+    }
+
+    public static String getDefaultYAxisDescription() {
+        return DEFAULT_Y_AXIS_DESCRIPTION;
     }
 }

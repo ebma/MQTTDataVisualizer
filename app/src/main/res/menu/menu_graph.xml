@@ -10,6 +10,5 @@
         android:title="@string/action_add_graph"
         android:orderInCategory="100"
         android:icon="@drawable/ic_add"
-        app:showAsAction="ifRoom"
-        android:onClick="onAddGraphClicked"/>
+        app:showAsAction="ifRoom"/>
 </menu>

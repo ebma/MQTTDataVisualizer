@@ -109,11 +109,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_graph_general_label">General</string>
     <string name="add_graph_name_label">Graph Name</string>
-    <string name="add_graph_name_default">Graph</string>
     <string name="add_graph_topic_label">Graph Topic</string>
-    <string name="add_graph_topic_default">/iotdata/</string>
     <string name="add_graph_y_label">Y-Axis Description</string>
-    <string name="add_graph_y_axis_default">Temperature</string>
     <string name="action_save_graph">Graph speichern</string>
 
 

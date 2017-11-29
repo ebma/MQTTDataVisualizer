@@ -141,6 +141,8 @@ public class MessagePersistence extends SQLiteOpenHelper implements BaseColumns 
 
         db.close(); //close the db then deal with the result of the query
 
+        System.out.println("Message persisted: " + getValues(message));
+
         if (newRowId == -1) {
             throw new PersistenceException("Failed to persist connection: " + message.getMessage());
         } else { //Successfully persisted assigning persistenceID
@@ -149,18 +151,13 @@ public class MessagePersistence extends SQLiteOpenHelper implements BaseColumns 
     }
 
     private ContentValues getValues(ReceivedMessage message) {
-        String stringMessage = new String(message.getMessage().getPayload());
-
-        // timestamp wird in bestimmtes format gebracht
-        SimpleDateFormat formatter = new SimpleDateFormat();
-        formatter.applyPattern("yyyy-MM-DD HH:mm:ss");
-        String timestamp = formatter.format(message.getTimestamp());
+        PersistedMessage pMessage = PersistedMessage.convertToPersistedMessage(message);
 
         ContentValues values = new ContentValues();
 
         //put the column values object
-        values.put(COLUMN_MESSAGE, stringMessage);
-        values.put(COLUMN_TIMESTAMP, timestamp);
+        values.put(COLUMN_MESSAGE, pMessage.getMessage());
+        values.put(COLUMN_TIMESTAMP, pMessage.getTimestampAsString(message.getTimestamp()));
         return values;
     }
 
@@ -184,7 +181,7 @@ public class MessagePersistence extends SQLiteOpenHelper implements BaseColumns 
 
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor c = db.query(topic, messageColumns, null, null, null, null, sort);
+        Cursor c = db.query(topic.replace("/", "_"), messageColumns, null, null, null, null, sort);
         ArrayList<PersistedMessage> list = new ArrayList<PersistedMessage>(c.getCount());
         for (int i = 0; i < c.getCount(); i++) {
             if (!c.moveToNext()) { //move to the next item throw persistence exception, if it fails
