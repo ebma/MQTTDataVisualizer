@@ -8,17 +8,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-
+/**
+ * Used for Messages that are restored from database
+ * in contrast to ReceivedMessage the timestamp is saved as string object
+ */
 public class PersistedMessage {
 
     // Final Constant for DateFormat
     public static final String TIMESTAMP_FORMAT = "yyyy-MM-DD HH:mm:ss";
+    private static SimpleDateFormat formatter = new SimpleDateFormat();
 
     private final String topic;
     private final String message;
     private final Date timestamp;
 
-    private static SimpleDateFormat formatter = new SimpleDateFormat();
 
     public PersistedMessage(String topic, String message, String timestamp) {
         this.topic = topic;

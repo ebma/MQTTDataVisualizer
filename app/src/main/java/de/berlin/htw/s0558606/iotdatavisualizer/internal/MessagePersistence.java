@@ -128,7 +128,7 @@ public class MessagePersistence extends SQLiteOpenHelper implements BaseColumns 
     }
 
     /**
-     * Persist a Connection to the database
+     * Persist a message to the database
      *
      * @param message the message to persist
      * @throws PersistenceException If storing the data fails
@@ -144,9 +144,8 @@ public class MessagePersistence extends SQLiteOpenHelper implements BaseColumns 
         System.out.println("Message persisted: " + getValues(message));
 
         if (newRowId == -1) {
-            throw new PersistenceException("Failed to persist connection: " + message.getMessage());
-        } else { //Successfully persisted assigning persistenceID
-            // TODO message.assignPersistenceId(newRowId);
+            throw new PersistenceException("Failed to persist message: " + message.getMessage());
+        } else {
         }
     }
 
@@ -162,10 +161,10 @@ public class MessagePersistence extends SQLiteOpenHelper implements BaseColumns 
     }
 
     /**
-     * Recreates connection objects based upon information stored in the database
+     * Recreates message objects based upon information stored in the database
      *
-     * @return list of connections that have been restored
-     * @throws PersistenceException if restoring connections fails, this is thrown
+     * @return list of messages that have been restored
+     * @throws PersistenceException if restoring messages fails, this is thrown
      */
     public List<PersistedMessage> restoreMessages(String topic) throws PersistenceException {
 
@@ -185,7 +184,7 @@ public class MessagePersistence extends SQLiteOpenHelper implements BaseColumns 
         ArrayList<PersistedMessage> list = new ArrayList<PersistedMessage>(c.getCount());
         for (int i = 0; i < c.getCount(); i++) {
             if (!c.moveToNext()) { //move to the next item throw persistence exception, if it fails
-                throw new PersistenceException("Failed restoring connection - count: " + c.getCount() + "loop iteration: " + i);
+                throw new PersistenceException("Failed restoring message - count: " + c.getCount() + "loop iteration: " + i);
             }
             //get data from cursor
             Long id = c.getLong(c.getColumnIndexOrThrow(_ID));

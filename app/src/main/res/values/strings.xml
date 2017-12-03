@@ -112,6 +112,13 @@
     <string name="add_graph_topic_label">Graph Topic</string>
     <string name="add_graph_y_label">Y-Axis Description</string>
     <string name="action_save_graph">Graph speichern</string>
+    <string name="action_edit_graph">Edit Graph</string>
+    <string name="edit_graph_advanced_label">Advanced</string>
+    <string name="edit_graph_minx_label">Min X Value</string>
+    <string name="edit_graph_maxx_label">Max X Value</string>
+    <string name="edit_graph_miny_label">Min Y Value</string>
+    <string name="edit_graph_maxy_label">Max Y Value</string>
+    <string name="reset_default_graph_button">Reset Values</string>
 
 
 </resources>

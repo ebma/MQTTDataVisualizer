@@ -1,5 +1,7 @@
 package de.berlin.htw.s0558606.iotdatavisualizer.model;
 
+import java.util.Date;
+
 import de.berlin.htw.s0558606.iotdatavisualizer.activity.Connection;
 import de.berlin.htw.s0558606.iotdatavisualizer.internal.Graph;
 
@@ -18,16 +20,27 @@ public class GraphModel {
     private String graphTopic = "";
     private String yAxisDescription = "";
 
+    private Date graphMinX;
+    private Date graphMaxX;
+
+    private double graphMinY;
+    private double graphMaxY;
+
 
     public GraphModel(){
 
     }
 
-    /** Initialise the GraphModel with an existing connection **/
+    /** Initialise the GraphModel with an existing graph **/
     public GraphModel(Graph graph){
         graphName = graph.getGraphName();
         graphTopic = graph.getGraphTopic();
         yAxisDescription = graph.getyAxisDescription();
+
+        graphMinX = graph.getMinX();
+        graphMaxX = graph.getMaxX();
+        graphMinY = graph.getMinY();
+        graphMaxY = graph.getMaxY();
     }
 
     public String getGraphName() {
@@ -54,33 +67,36 @@ public class GraphModel {
         this.yAxisDescription = yAxisDescription;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        GraphModel that = (GraphModel) o;
-
-        if (!graphName.equals(that.graphName)) return false;
-        if (!graphTopic.equals(that.graphTopic)) return false;
-        return yAxisDescription.equals(that.yAxisDescription);
+    public Date getGraphMinX() {
+        return graphMinX;
     }
 
-    @Override
-    public int hashCode() {
-        int result = graphName.hashCode();
-        result = 31 * result + graphTopic.hashCode();
-        result = 31 * result + yAxisDescription.hashCode();
-        return result;
+    public void setGraphMinX(Date graphMinX) {
+        this.graphMinX = graphMinX;
     }
 
-    @Override
-    public String toString() {
-        return "GraphModel{" +
-                "graphName='" + graphName + '\'' +
-                ", graphTopic='" + graphTopic + '\'' +
-                ", yAxisDescription='" + yAxisDescription + '\'' +
-                '}';
+    public Date getGraphMaxX() {
+        return graphMaxX;
+    }
+
+    public void setGraphMaxX(Date graphMaxX) {
+        this.graphMaxX = graphMaxX;
+    }
+
+    public double getGraphMinY() {
+        return graphMinY;
+    }
+
+    public void setGraphMinY(double graphMinY) {
+        this.graphMinY = graphMinY;
+    }
+
+    public double getGraphMaxY() {
+        return graphMaxY;
+    }
+
+    public void setGraphMaxY(double graphMaxY) {
+        this.graphMaxY = graphMaxY;
     }
 
     public static String getDefaultGraphName() {
@@ -93,5 +109,38 @@ public class GraphModel {
 
     public static String getDefaultYAxisDescription() {
         return DEFAULT_Y_AXIS_DESCRIPTION;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GraphModel that = (GraphModel) o;
+
+        if (Double.compare(that.graphMinY, graphMinY) != 0) return false;
+        if (Double.compare(that.graphMaxY, graphMaxY) != 0) return false;
+        if (!graphName.equals(that.graphName)) return false;
+        if (!graphTopic.equals(that.graphTopic)) return false;
+        if (!yAxisDescription.equals(that.yAxisDescription)) return false;
+        if (graphMinX != null ? !graphMinX.equals(that.graphMinX) : that.graphMinX != null)
+            return false;
+        return graphMaxX != null ? graphMaxX.equals(that.graphMaxX) : that.graphMaxX == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = graphName.hashCode();
+        result = 31 * result + graphTopic.hashCode();
+        result = 31 * result + yAxisDescription.hashCode();
+        result = 31 * result + (graphMinX != null ? graphMinX.hashCode() : 0);
+        result = 31 * result + (graphMaxX != null ? graphMaxX.hashCode() : 0);
+        temp = Double.doubleToLongBits(graphMinY);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(graphMaxY);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 }

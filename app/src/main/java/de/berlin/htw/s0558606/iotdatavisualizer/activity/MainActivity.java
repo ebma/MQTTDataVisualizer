@@ -223,8 +223,6 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 ActionListener.Action.CONNECT, connection, actionArgs);
         connection.getClient().setCallback(new MqttCallbackHandler(this, model.getClientHandle()));
 
-
-
         connection.getClient().setTraceCallback(new MqttTraceCallback());
 
         MqttConnectOptions connOpts = optionsFromModel(model);

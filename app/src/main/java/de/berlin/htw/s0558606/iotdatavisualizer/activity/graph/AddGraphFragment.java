@@ -1,4 +1,4 @@
-package de.berlin.htw.s0558606.iotdatavisualizer.activity;
+package de.berlin.htw.s0558606.iotdatavisualizer.activity.graph;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -26,6 +26,9 @@ import java.util.Map;
 import java.util.Random;
 
 import de.berlin.htw.s0558606.iotdatavisualizer.R;
+import de.berlin.htw.s0558606.iotdatavisualizer.activity.ActivityConstants;
+import de.berlin.htw.s0558606.iotdatavisualizer.activity.Connection;
+import de.berlin.htw.s0558606.iotdatavisualizer.activity.ConnectionFragment;
 import de.berlin.htw.s0558606.iotdatavisualizer.internal.Connections;
 import de.berlin.htw.s0558606.iotdatavisualizer.internal.Graph;
 import de.berlin.htw.s0558606.iotdatavisualizer.internal.PersistenceException;
@@ -56,8 +59,7 @@ public class AddGraphFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Map<String, Connection> connections = Connections.getInstance(this.getActivity())
-                .getConnections();
+        Map<String, Connection> connections = Connections.getInstance(this.getActivity()).getConnections();
         connection = connections.get(this.getArguments().getString(ActivityConstants.CONNECTION_KEY));
 
         setHasOptionsMenu(true);

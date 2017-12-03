@@ -1,0 +1,283 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:orientation="vertical"
+    tools:context="de.berlin.htw.s0558606.iotdatavisualizer.activity.graph.EditGraphDetailsFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--                    General Settings                     -->
+
+        <TextView
+            android:id="@+id/generalTextView"
+            style="@style/HeaderText"
+            android:text="@string/add_graph_general_label" />
+
+        <LinearLayout
+            android:id="@+id/graph_name_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/generalTextView"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/graph_name_label"
+                style="@style/spinnerTextFieldLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_graph_name_label" />
+
+            <EditText
+                android:id="@+id/graph_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:ems="10"
+                android:inputType="text"
+                android:lines="1" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider1"
+            style="@style/Divider"
+            android:layout_below="@+id/graph_name_group" />
+
+
+        <LinearLayout
+            android:id="@+id/graph_topic_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/graph_topic_label"
+                style="@style/spinnerTextFieldLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_graph_topic_label" />
+
+            <EditText
+                android:id="@+id/graph_topic"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:ems="10"
+                android:inputType="text"
+                android:lines="1" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider2"
+            style="@style/Divider"
+            android:layout_below="@+id/graph_topic_group" />
+
+        <LinearLayout
+            android:id="@+id/y_axis_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider2"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/y_axis_label"
+                style="@style/spinnerTextFieldLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_graph_y_label" />
+
+            <EditText
+                android:id="@+id/graph_y_axis"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:ems="10"
+                android:lines="1"/>
+        </LinearLayout>
+
+        <!-- Advanced Category -->
+
+        <View
+            android:id="@+id/divider3"
+            style="@style/Divider"
+            android:layout_below="@+id/y_axis_group" />
+
+        <TextView
+            android:id="@+id/advancedTextView"
+            style="@style/HeaderText"
+            android:layout_below="@+id/divider3"
+            android:text="@string/edit_graph_advanced_label" />
+
+        <LinearLayout
+            android:id="@+id/graph_minx_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/advancedTextView"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/graph_minx_label"
+                style="@style/spinnerTextFieldLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_graph_minx_label"
+                android:layout_weight="0.45"/>
+
+            <EditText
+                android:id="@+id/graph_minx_datepicker"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:ems="10"
+                android:focusable="false"
+                android:lines="1"
+                android:layout_weight="0.35"/>
+
+
+            <EditText
+                android:id="@+id/graph_minx_timepicker"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:ems="10"
+                android:focusable="false"
+                android:lines="1"
+                android:layout_weight="0.25"/>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider4"
+            style="@style/Divider"
+            android:layout_below="@+id/graph_minx_group" />
+
+        <LinearLayout
+            android:id="@+id/graph_maxx_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider4"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/graph_maxx_label"
+                style="@style/spinnerTextFieldLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_graph_maxx_label"
+                android:layout_weight="0.45"/>
+
+            <EditText
+                android:id="@+id/graph_maxx_datepicker"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:ems="10"
+                android:focusable="false"
+                android:lines="1"
+                android:layout_weight="0.35"/>
+
+
+            <EditText
+                android:id="@+id/graph_maxx_timepicker"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:ems="10"
+                android:focusable="false"
+                android:lines="1"
+                android:layout_weight="0.25"/>
+        </LinearLayout>
+
+
+        <View
+            android:id="@+id/divider5"
+            style="@style/Divider"
+            android:layout_below="@+id/graph_maxx_group" />
+
+        <LinearLayout
+            android:id="@+id/graph_miny_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider5"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/graph_miny_label"
+                style="@style/spinnerTextFieldLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_graph_miny_label"/>
+
+            <EditText
+                android:id="@+id/graph_miny"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:ems="10"
+                android:inputType="numberDecimal|numberSigned"
+                android:lines="1"/>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider6"
+            style="@style/Divider"
+            android:layout_below="@+id/graph_miny_group" />
+
+        <LinearLayout
+            android:id="@+id/graph_maxy_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider6"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/graph_maxy_label"
+                style="@style/spinnerTextFieldLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_graph_maxy_label"/>
+
+            <EditText
+                android:id="@+id/graph_maxy"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"
+                android:ems="10"
+                android:inputType="numberDecimal|numberSigned"
+                android:lines="1"/>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider7"
+            style="@style/Divider"
+            android:layout_below="@+id/graph_maxy_group" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/reset_default_graph_button"
+            android:layout_below="@id/divider7"
+            android:layout_centerHorizontal="true"
+            android:text="@string/reset_default_graph_button"/>
+
+
+    </RelativeLayout>
+</ScrollView>
+

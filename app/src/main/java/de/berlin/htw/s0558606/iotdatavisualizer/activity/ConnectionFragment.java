@@ -14,6 +14,7 @@ import android.widget.Switch;
 import java.util.Map;
 
 import de.berlin.htw.s0558606.iotdatavisualizer.R;
+import de.berlin.htw.s0558606.iotdatavisualizer.activity.graph.GraphFragment;
 import de.berlin.htw.s0558606.iotdatavisualizer.internal.Connections;
 
 

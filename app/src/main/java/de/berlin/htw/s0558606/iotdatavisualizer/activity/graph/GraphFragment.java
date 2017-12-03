@@ -1,6 +1,5 @@
-package de.berlin.htw.s0558606.iotdatavisualizer.activity;
+package de.berlin.htw.s0558606.iotdatavisualizer.activity.graph;
 
-import android.content.Context;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,12 +11,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -26,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import de.berlin.htw.s0558606.iotdatavisualizer.R;
+import de.berlin.htw.s0558606.iotdatavisualizer.activity.ActivityConstants;
+import de.berlin.htw.s0558606.iotdatavisualizer.activity.Connection;
 import de.berlin.htw.s0558606.iotdatavisualizer.components.GraphListViewAdapter;
 import de.berlin.htw.s0558606.iotdatavisualizer.internal.Connections;
 import de.berlin.htw.s0558606.iotdatavisualizer.internal.Graph;
@@ -34,11 +32,6 @@ import de.berlin.htw.s0558606.iotdatavisualizer.internal.PersistenceException;
 import de.berlin.htw.s0558606.iotdatavisualizer.model.PersistedMessage;
 import de.berlin.htw.s0558606.iotdatavisualizer.model.ReceivedMessage;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link GraphFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class GraphFragment extends Fragment {
 
     private final int MAX_DATA_POINTS = 100;
@@ -58,19 +51,6 @@ public class GraphFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment GraphFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static GraphFragment newInstance() {
-        GraphFragment fragment = new GraphFragment();
-
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +66,7 @@ public class GraphFragment extends Fragment {
         connection.addReceivedMessageListener(new IReceivedMessageListener() {
             @Override
             public void onMessageReceived(ReceivedMessage message) {
-                updateGraph(message.getTopic());
+                updateGraph(message);
             }
         });
 
@@ -110,7 +90,8 @@ public class GraphFragment extends Fragment {
 
 
         listView = rootView.findViewById(R.id.graph_list_view);
-        graphListViewAdapter = new GraphListViewAdapter(rootView.getContext(), graphList);
+        // create listviewadapter
+        graphListViewAdapter = new GraphListViewAdapter(this, graphList, connection);
         listView.setAdapter(graphListViewAdapter);
 
         if (graphList.size() > 0) {
@@ -128,10 +109,13 @@ public class GraphFragment extends Fragment {
         return rootView;
     }
 
-    public void updateGraph(String topic) {
+    public void updateGraph(ReceivedMessage message) {
         for (Graph graph : graphList) {
-            if (graph.getGraphTopic().equals(topic)) {
-                graph.setLineGraphSeries(getDataPointsFromPersistedMessagesForTopic(topic));
+            if (graph.getGraphTopic().equals(message.getTopic())) {
+                PersistedMessage pMessage = PersistedMessage.convertToPersistedMessage(message);
+                double value = Double.parseDouble(pMessage.getMessage());
+
+                graph.getLineGraphSeries().appendData(new DataPoint(pMessage.getTimestamp(), value), true, 100);
             }
         }
         graphListViewAdapter.notifyDataSetChanged();
@@ -159,7 +143,6 @@ public class GraphFragment extends Fragment {
                     DataPoint dataPoint = new DataPoint(message.getTimestamp(), value);
 
                     series.appendData(dataPoint, true, MAX_DATA_POINTS);
-                    System.out.println(dataPoint);
 
                 } catch (NumberFormatException e) {
                     System.out.println("Nachricht wurde uebersprungen: " + message.getMessage());

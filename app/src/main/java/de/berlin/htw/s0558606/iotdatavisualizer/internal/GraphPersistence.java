@@ -6,11 +6,17 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.Log;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.berlin.htw.s0558606.iotdatavisualizer.activity.Connection;
+import de.berlin.htw.s0558606.iotdatavisualizer.model.PersistedMessage;
+import de.berlin.htw.s0558606.iotdatavisualizer.model.Subscription;
 
 /**
  * Created by Marcel Ebert S0558606 on 28.11.17.
@@ -50,6 +56,26 @@ public class GraphPersistence extends SQLiteOpenHelper implements BaseColumns {
      **/
     private static final String COLUMN_DESCRIPTION = "description";
 
+    /**
+     * Table column for lower bound of x axis from graph
+     **/
+    private static final String COLUMN_MIN_X = "minx";
+
+    /**
+     * Table column for upper bound of x axis from graph
+     **/
+    private static final String COLUMN_MAX_X = "maxx";
+
+    /**
+     * Table column for lower bound of y axis from graph
+     **/
+    private static final String COLUMN_MIN_Y = "miny";
+
+    /**
+     * Table column for upper bound of y axis from graph
+     **/
+    private static final String COLUMN_MAX_Y = "maxy";
+
 
     //sql lite data types
     /**
@@ -60,6 +86,10 @@ public class GraphPersistence extends SQLiteOpenHelper implements BaseColumns {
      * Int type for SQLite
      **/
     private static final String INT_TYPE = " INTEGER";
+    /**
+     * Double type for SQLite
+     **/
+    private static final String DOUBLE_TYPE = " REAL";
     /**
      * Comma separator
      **/
@@ -74,8 +104,11 @@ public class GraphPersistence extends SQLiteOpenHelper implements BaseColumns {
                     _ID + " INTEGER PRIMARY KEY," +
                     COLUMN_TOPIC + TEXT_TYPE + COMMA_SEP +
                     COLUMN_NAME + TEXT_TYPE + COMMA_SEP +
-                    COLUMN_DESCRIPTION + TEXT_TYPE + ");";
-
+                    COLUMN_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
+                    COLUMN_MIN_X + TEXT_TYPE + COMMA_SEP +
+                    COLUMN_MAX_X + TEXT_TYPE + COMMA_SEP +
+                    COLUMN_MIN_Y + DOUBLE_TYPE + COMMA_SEP +
+                    COLUMN_MAX_Y + DOUBLE_TYPE + ");";
     /**
      * Delete tables entry
      **/
@@ -83,10 +116,14 @@ public class GraphPersistence extends SQLiteOpenHelper implements BaseColumns {
             "DROP TABLE IF EXISTS " + TABLE_GRAPHS;
 
 
+    public static final String DATE_FORMAT = "yyyy-MM-DD HH:mm";
+    private static SimpleDateFormat formatter = new SimpleDateFormat();
+
+
     /**
      * Creates the persistence object passing it a context
      *
-     * @param context Context that the application is running in
+     * @param context  Context that the application is running in
      * @param clientID
      */
     public GraphPersistence(Context context, String clientID) {
@@ -139,8 +176,9 @@ public class GraphPersistence extends SQLiteOpenHelper implements BaseColumns {
 
         if (newRowId == -1) {
             throw new PersistenceException("Failed to persist graph: " + graph.getGraphName());
-        } else { //Successfully persisted assigning persistenceID
-
+        } else {
+            //Successfully persisted, assigning persistenceID
+            graph.setPersistenceId(newRowId);
         }
     }
 
@@ -155,14 +193,33 @@ public class GraphPersistence extends SQLiteOpenHelper implements BaseColumns {
         values.put(COLUMN_TOPIC, topic);
         values.put(COLUMN_NAME, name);
         values.put(COLUMN_DESCRIPTION, description);
+        if (graph.getMinX() != null)
+            values.put(COLUMN_MIN_X, getTimestampAsString(graph.getMinX()));
+        if (graph.getMaxX() != null)
+            values.put(COLUMN_MAX_X, getTimestampAsString(graph.getMaxX()));
+        values.put(COLUMN_MIN_Y, graph.getMinY());
+        values.put(COLUMN_MAX_Y, graph.getMaxY());
         return values;
+    }
+
+    /**
+     * Updates a {@link Graph} in the database
+     *
+     * @param graph {@link Graph} to update
+     */
+    public void updateGraph(Graph graph) {
+        SQLiteDatabase db = getWritableDatabase();
+        String whereClause = _ID + "=?";
+        String[] whereArgs = new String[1];
+        whereArgs[0] = String.valueOf(graph.getPersistenceId());
+        db.update(TABLE_GRAPHS, getValues(graph), whereClause, whereArgs);
     }
 
     /**
      * Recreates graph objects based upon information stored in the database
      *
      * @return list of graphs that have been restored
-     * @throws PersistenceException if restoring connections fails, this is thrown
+     * @throws PersistenceException if restoring Graphs fails, this is thrown
      */
     public List<Graph> restoreGraphs() throws PersistenceException {
 
@@ -171,6 +228,10 @@ public class GraphPersistence extends SQLiteOpenHelper implements BaseColumns {
                 COLUMN_TOPIC,
                 COLUMN_NAME,
                 COLUMN_DESCRIPTION,
+                COLUMN_MIN_X,
+                COLUMN_MAX_X,
+                COLUMN_MIN_Y,
+                COLUMN_MAX_Y,
                 _ID
 
         };
@@ -193,7 +254,20 @@ public class GraphPersistence extends SQLiteOpenHelper implements BaseColumns {
             String name = c.getString(c.getColumnIndexOrThrow(COLUMN_NAME));
             String description = c.getString(c.getColumnIndexOrThrow(COLUMN_DESCRIPTION));
 
+            String minxString = c.getString(c.getColumnIndexOrThrow(COLUMN_MIN_X));
+            String maxxString = c.getString(c.getColumnIndexOrThrow(COLUMN_MAX_X));
+            double miny = c.getDouble(c.getColumnIndexOrThrow(COLUMN_MIN_Y));
+            double maxy = c.getDouble(c.getColumnIndexOrThrow(COLUMN_MAX_Y));
+
             Graph graph = new Graph(name, topic, description);
+            graph.setPersistenceId(id);
+
+            if (minxString != null)
+                graph.setMinX(getTimestampAsDate(minxString));
+            if (maxxString != null)
+                graph.setMaxX(getTimestampAsDate(maxxString));
+            graph.setMinY(miny);
+            graph.setMaxY(maxy);
 
             //store it in the list
             list.add(graph);
@@ -206,5 +280,39 @@ public class GraphPersistence extends SQLiteOpenHelper implements BaseColumns {
         db.close();
         return list;
 
+    }
+
+    /**
+     * Deletes a graph from the database
+     *
+     * @param graph The graph to delete from the database
+     */
+    public void deleteSubscription(Graph graph) {
+        Log.d(TAG, "Deleting Subscription: " + graph.toString());
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLE_GRAPHS, _ID + "=?", new String[]{String.valueOf(graph.getPersistenceId())});
+        db.close();
+        //don't care if it failed, means it's not in the db therefore no need to delete
+
+    }
+
+    public static String getTimestampAsString(Date timestamp) {
+        formatter.applyPattern(PersistedMessage.TIMESTAMP_FORMAT);
+
+        String timestampString = formatter.format(timestamp);
+
+        return timestampString;
+    }
+
+    public static Date getTimestampAsDate(String timestamp) {
+        formatter.applyPattern(PersistedMessage.TIMESTAMP_FORMAT);
+
+        Date result = null;
+        try {
+            result = formatter.parse(timestamp);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }
