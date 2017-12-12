@@ -115,7 +115,7 @@ public class GraphFragment extends Fragment {
                 PersistedMessage pMessage = PersistedMessage.convertToPersistedMessage(message);
                 double value = Double.parseDouble(pMessage.getMessage());
 
-                graph.getLineGraphSeries().appendData(new DataPoint(pMessage.getTimestamp(), value), true, 100);
+                graph.getLineGraphSeries().appendData(new DataPoint(pMessage.getTimestamp(), value), true, Graph.MAX_DATA_POINTS);
             }
         }
         graphListViewAdapter.notifyDataSetChanged();

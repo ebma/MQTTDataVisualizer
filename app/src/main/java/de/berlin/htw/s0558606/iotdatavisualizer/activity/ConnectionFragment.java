@@ -60,7 +60,7 @@ public class ConnectionFragment extends Fragment {
     }
 
     private void changeConnectedState(boolean state){
-        //mTabHost.getTabWidget().getChildTabViewAt(1).setEnabled(state);
+        mTabHost.getTabWidget().getChildTabViewAt(1).setEnabled(state);
         //mTabHost.getTabWidget().getChildTabViewAt(2).setEnabled(state);
         connectSwitch.setChecked(state);
     }

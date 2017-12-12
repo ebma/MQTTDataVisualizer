@@ -21,6 +21,8 @@ import de.berlin.htw.s0558606.iotdatavisualizer.model.PersistedMessage;
  */
 public class Graph implements Parcelable {
 
+    public static final int MAX_DATA_POINTS = 3000;
+
     /**
      * GraphPersistence id, used by {@link GraphPersistence}
      **/
