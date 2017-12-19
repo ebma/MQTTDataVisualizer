@@ -166,6 +166,7 @@ public class AddGraphFragment extends Fragment {
         fragment.setArguments(bundle);
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        //fragmentManager.popBackStackImmediate();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container_body, fragment);
         fragmentTransaction.commit();

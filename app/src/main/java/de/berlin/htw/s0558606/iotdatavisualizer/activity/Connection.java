@@ -36,7 +36,7 @@ public class Connection {
      * Basic information about the client
      */
 
-    private static final String activityClass = "org.eclipse.paho.android.sample.activity.MainActivity";
+    private static final String activityClass = "de.berlin.htw.s0558606.iotdatavisualizer.activity.MainActivity";
 
     /**
      * ClientHandle for this Connection object

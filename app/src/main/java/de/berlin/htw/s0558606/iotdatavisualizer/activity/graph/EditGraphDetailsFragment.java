@@ -278,9 +278,10 @@ public class EditGraphDetailsFragment extends Fragment {
         fragment.setArguments(bundle);
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container_body, fragment);
-        fragmentTransaction.commit();
+        //FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentManager.popBackStackImmediate();
+        //fragmentTransaction.replace(R.id.container_body, fragment);
+        //fragmentTransaction.commit();
     }
 
     @Override

@@ -42,17 +42,18 @@ public class MQTTMessageGenerator implements MqttCallback {
     }
 
     public void generateRandomNumbers() throws MqttException {
-        while (true){
-            MqttMessage message = new MqttMessage();
-            double number = random.nextDouble() * 20 - 10;
-            message.setPayload(Double.toString(number).getBytes());
-            client.publish("/iotdata", message);
+        try {
+            while (true) {
+                MqttMessage message = new MqttMessage();
+                double number = random.nextDouble() * 20 - 10;
+                message.setPayload(Double.toString(number).getBytes());
+                client.publish("/iotdata", message);
 
-            try {
                 Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

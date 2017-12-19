@@ -13,12 +13,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
+import com.jjoe64.graphview.series.Series;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 import de.berlin.htw.s0558606.iotdatavisualizer.R;
@@ -26,11 +32,13 @@ import de.berlin.htw.s0558606.iotdatavisualizer.activity.ActivityConstants;
 import de.berlin.htw.s0558606.iotdatavisualizer.activity.Connection;
 import de.berlin.htw.s0558606.iotdatavisualizer.internal.Connections;
 import de.berlin.htw.s0558606.iotdatavisualizer.internal.Graph;
+import de.berlin.htw.s0558606.iotdatavisualizer.internal.IReceivedMessageListener;
+import de.berlin.htw.s0558606.iotdatavisualizer.model.PersistedMessage;
+import de.berlin.htw.s0558606.iotdatavisualizer.model.ReceivedMessage;
 
 /**
  * Holds a graphview to display the graph in more detail
  * has an options menu where attributes of the graph object can be edited
- *
  */
 public class DetailedGraphFragment extends Fragment {
 
@@ -50,6 +58,12 @@ public class DetailedGraphFragment extends Fragment {
         connection = connections.get(this.getArguments().getString(ActivityConstants.CONNECTION_KEY));
         graph = (Graph) this.getArguments().get(ActivityConstants.GRAPH_KEY);
 
+        connection.addReceivedMessageListener(new IReceivedMessageListener() {
+            @Override
+            public void onMessageReceived(ReceivedMessage message) {
+                updateGraph(message);
+            }
+        });
 
         setHasOptionsMenu(true);
     }
@@ -58,7 +72,7 @@ public class DetailedGraphFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_detailed_graph, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_detailed_graph, container, false);
 
         graphView = rootView.findViewById(R.id.detailed_graphview);
 
@@ -69,13 +83,17 @@ public class DetailedGraphFragment extends Fragment {
             graphView.getViewport().setYAxisBoundsManual(true);
             graphView.getViewport().setMinY(graph.getMinY());
             graphView.getViewport().setMaxY(graph.getMaxY());
+            System.out.println("YAXISBOUNDS MANUAL TRUE");
         }
 
-        if (graph.getMinX() != null && graph.getMaxX() != null) {
+        if (graph.getMinX() != null || graph.getMaxX() != null) {
             if (!graph.getMinX().equals(graph.getMaxX())) {
                 graphView.getViewport().setXAxisBoundsManual(true);
-                graphView.getViewport().setMinX(graph.getMinX().getTime());
-                graphView.getViewport().setMaxX(graph.getMaxX().getTime());
+                if (graph.getMinX() != null)
+                    graphView.getViewport().setMinX(graph.getMinX().getTime());
+                if (graph.getMaxX() != null)
+                    graphView.getViewport().setMaxX(graph.getMaxX().getTime());
+                System.out.println("XAXISBOUNDS MANUAL TRUE");
             }
         }
 
@@ -96,22 +114,39 @@ public class DetailedGraphFragment extends Fragment {
         graph.getLineGraphSeries().setDataPointsRadius(10);
         graph.getLineGraphSeries().setThickness(8);
 
+
         // enable scrolling
-        //graphView.getViewport().setScrollable(true);
+        graphView.getViewport().setScrollable(true);
 
         // enable scaling
-        //graphView.getViewport().setScalable(true);
-
-        // TODO add ondatapointclicklistener and show detailed message attributes in view below graphview
-
+        graphView.getViewport().setScalable(true);
 
         // set date label formatter
-        SimpleDateFormat dateFormat = new SimpleDateFormat();
+        final SimpleDateFormat dateFormat = new SimpleDateFormat();
         dateFormat.applyPattern(GraphFragment.GRAPH_VIEW_PATTERN);
         graphView.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(graphView.getContext(), dateFormat));
         graphView.getGridLabelRenderer().setNumHorizontalLabels(4);
 
+        graph.getLineGraphSeries().setOnDataPointTapListener(new OnDataPointTapListener() {
+            @Override
+            public void onTap(Series series, DataPointInterface dataPoint) {
+                TextView textView = rootView.findViewById(R.id.detailed_graph_textview);
+                dateFormat.applyPattern(GraphFragment.GRAPH_VIEW_EXTENDED_PATTERN);
+                String date = dateFormat.format(new Date((long) dataPoint.getX()));
+                textView.setText("X-Wert:" + date + System.getProperty("line.separator") + "Y-Wert: " + dataPoint.getY());
+            }
+        });
+
         return rootView;
+    }
+
+    public void updateGraph(ReceivedMessage message) {
+        if (graph.getGraphTopic().equals(message.getTopic())) {
+            PersistedMessage pMessage = PersistedMessage.convertToPersistedMessage(message);
+            double value = Double.parseDouble(pMessage.getMessage());
+
+            graph.getLineGraphSeries().appendData(new DataPoint(pMessage.getTimestamp(), value), true, Graph.MAX_DATA_POINTS);
+        }
     }
 
     @Override

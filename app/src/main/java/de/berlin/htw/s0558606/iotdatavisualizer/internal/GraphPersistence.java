@@ -193,10 +193,16 @@ public class GraphPersistence extends SQLiteOpenHelper implements BaseColumns {
         values.put(COLUMN_TOPIC, topic);
         values.put(COLUMN_NAME, name);
         values.put(COLUMN_DESCRIPTION, description);
-        if (graph.getMinX() != null)
+        if (graph.getMinX() != null) {
             values.put(COLUMN_MIN_X, getTimestampAsString(graph.getMinX()));
-        if (graph.getMaxX() != null)
-            values.put(COLUMN_MAX_X, getTimestampAsString(graph.getMaxX()));
+        } else {
+            values.put(COLUMN_MIN_X, "0");
+        }
+        if (graph.getMaxX() != null) {
+            values.put(COLUMN_MAX_X, "0");
+        } else {
+
+        }
         values.put(COLUMN_MIN_Y, graph.getMinY());
         values.put(COLUMN_MAX_Y, graph.getMaxY());
         return values;
@@ -287,7 +293,7 @@ public class GraphPersistence extends SQLiteOpenHelper implements BaseColumns {
      *
      * @param graph The graph to delete from the database
      */
-    public void deleteSubscription(Graph graph) {
+    public void deleteGraph(Graph graph) {
         Log.d(TAG, "Deleting Subscription: " + graph.toString());
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TABLE_GRAPHS, _ID + "=?", new String[]{String.valueOf(graph.getPersistenceId())});
@@ -309,7 +315,10 @@ public class GraphPersistence extends SQLiteOpenHelper implements BaseColumns {
 
         Date result = null;
         try {
-            result = formatter.parse(timestamp);
+            if (timestamp.equals("0")) {
+                result = null;
+            } else
+                result = formatter.parse(timestamp);
         } catch (ParseException e) {
             e.printStackTrace();
         }

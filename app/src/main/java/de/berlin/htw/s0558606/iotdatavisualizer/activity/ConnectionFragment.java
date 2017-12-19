@@ -51,9 +51,9 @@ public class ConnectionFragment extends Fragment {
         mTabHost = (FragmentTabHost) rootView.findViewById(android.R.id.tabhost);
         mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
         // Add a tab to the tabHost
-        mTabHost.addTab(mTabHost.newTabSpec("History").setIndicator("History"), HistoryFragment.class, bundle);
-        mTabHost.addTab(mTabHost.newTabSpec("Subscribe").setIndicator("Subscribe"), SubscriptionFragment.class, bundle);
         mTabHost.addTab(mTabHost.newTabSpec("Graph").setIndicator("Graph"), GraphFragment.class, bundle);
+        mTabHost.addTab(mTabHost.newTabSpec("Subscribe").setIndicator("Subscribe"), SubscriptionFragment.class, bundle);
+        mTabHost.addTab(mTabHost.newTabSpec("History").setIndicator("History"), HistoryFragment.class, bundle);
 
         return rootView;
 

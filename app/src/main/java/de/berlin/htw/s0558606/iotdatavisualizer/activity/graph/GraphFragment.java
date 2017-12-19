@@ -34,9 +34,8 @@ import de.berlin.htw.s0558606.iotdatavisualizer.model.ReceivedMessage;
 
 public class GraphFragment extends Fragment {
 
-    private final int MAX_DATA_POINTS = 100;
-
-    public static final String GRAPH_VIEW_PATTERN = "HH:mm:ss";
+    public static final String GRAPH_VIEW_PATTERN = "dd/MM_HH:mm:ss";
+    public static final String GRAPH_VIEW_EXTENDED_PATTERN = "dd.MM.yy HH:mm:ss";
 
     private ArrayList<ReceivedMessage> messages;
 
@@ -44,6 +43,7 @@ public class GraphFragment extends Fragment {
 
     private Connection connection;
 
+    private View rootView;
     private ListView listView;
     private GraphListViewAdapter graphListViewAdapter;
 
@@ -70,6 +70,7 @@ public class GraphFragment extends Fragment {
             }
         });
 
+
         try {
             graphList = connection.getGraphPersistence().restoreGraphs();
             if (graphList.size() > 0) {
@@ -84,7 +85,7 @@ public class GraphFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_graph, container, false);
+        rootView = inflater.inflate(R.layout.fragment_graph, container, false);
 
         //GraphView graphView = (GraphView) rootView.findViewById(R.id.graph);
 
@@ -93,6 +94,7 @@ public class GraphFragment extends Fragment {
         // create listviewadapter
         graphListViewAdapter = new GraphListViewAdapter(this, graphList, connection);
         listView.setAdapter(graphListViewAdapter);
+
 
         if (graphList.size() > 0) {
             for (Graph graph : graphList) {
@@ -142,7 +144,7 @@ public class GraphFragment extends Fragment {
                     double value = Double.parseDouble(message.getMessage());
                     DataPoint dataPoint = new DataPoint(message.getTimestamp(), value);
 
-                    series.appendData(dataPoint, true, MAX_DATA_POINTS);
+                    series.appendData(dataPoint, true, Graph.MAX_DATA_POINTS);
 
                 } catch (NumberFormatException e) {
                     System.out.println("Nachricht wurde uebersprungen: " + message.getMessage());

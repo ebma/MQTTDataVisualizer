@@ -35,6 +35,12 @@ public class PersistedMessage {
         this.timestamp = timestamp;
     }
 
+    /**
+     * Converts an Object of Type ReceivedMessage to an Object of type PersistedMessage
+     * The difference is the timestamp parameter
+     * @param message the receivedmessage to be converted
+     * @return an object of type persistedmessage
+     */
     public static PersistedMessage convertToPersistedMessage(ReceivedMessage message){
         String stringMessage = new String(message.getMessage().getPayload());
 

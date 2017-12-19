@@ -108,7 +108,7 @@ public class GraphListViewAdapter extends ArrayAdapter<Graph> {
             @Override
             public boolean onLongClick(View v) {
                 graphs.remove(position);
-                connection.getGraphPersistence().deleteSubscription(graph);
+                connection.getGraphPersistence().deleteGraph(graph);
                 notifyDataSetChanged();
 
                 return true;
