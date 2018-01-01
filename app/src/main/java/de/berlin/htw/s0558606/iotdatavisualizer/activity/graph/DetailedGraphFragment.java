@@ -46,6 +46,7 @@ public class DetailedGraphFragment extends Fragment {
 
     private Graph graph;
     private GraphView graphView;
+    private IReceivedMessageListener listener;
 
     public DetailedGraphFragment() {
         setHasOptionsMenu(true);
@@ -58,14 +59,27 @@ public class DetailedGraphFragment extends Fragment {
         connection = connections.get(this.getArguments().getString(ActivityConstants.CONNECTION_KEY));
         graph = (Graph) this.getArguments().get(ActivityConstants.GRAPH_KEY);
 
-        connection.addReceivedMessageListener(new IReceivedMessageListener() {
+        listener = new IReceivedMessageListener() {
             @Override
             public void onMessageReceived(ReceivedMessage message) {
                 updateGraph(message);
             }
-        });
+        };
 
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        connection.addReceivedMessageListener(listener);
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        connection.removeReceivedMessageListener(listener);
     }
 
     @Override
@@ -133,7 +147,7 @@ public class DetailedGraphFragment extends Fragment {
                 TextView textView = rootView.findViewById(R.id.detailed_graph_textview);
                 dateFormat.applyPattern(GraphFragment.GRAPH_VIEW_EXTENDED_PATTERN);
                 String date = dateFormat.format(new Date((long) dataPoint.getX()));
-                textView.setText("X-Wert:" + date + System.getProperty("line.separator") + "Y-Wert: " + dataPoint.getY());
+                textView.setText("X-Wert: " + date + System.getProperty("line.separator") + "Y-Wert: " + dataPoint.getY());
             }
         });
 
@@ -145,7 +159,7 @@ public class DetailedGraphFragment extends Fragment {
             PersistedMessage pMessage = PersistedMessage.convertToPersistedMessage(message);
             double value = Double.parseDouble(pMessage.getMessage());
 
-            graph.getLineGraphSeries().appendData(new DataPoint(pMessage.getTimestamp(), value), true, Graph.MAX_DATA_POINTS);
+            graph.getLineGraphSeries().appendData(new DataPoint(pMessage.getTimestamp(), value), false, Graph.MAX_DATA_POINTS);
         }
     }
 

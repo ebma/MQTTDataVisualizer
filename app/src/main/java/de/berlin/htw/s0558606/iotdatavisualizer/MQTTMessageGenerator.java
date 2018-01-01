@@ -33,7 +33,7 @@ public class MQTTMessageGenerator implements MqttCallback {
             client = new MqttClient("tcp://iot.eclipse.org:1883", "Testclient", persistence);
             client.connect();
             client.setCallback(this);
-            client.subscribe("/iotdata");
+            client.subscribe("/iotdata/temperature");
 
             generateRandomNumbers();
         } catch (MqttException e) {
@@ -47,7 +47,7 @@ public class MQTTMessageGenerator implements MqttCallback {
                 MqttMessage message = new MqttMessage();
                 double number = random.nextDouble() * 20 - 10;
                 message.setPayload(Double.toString(number).getBytes());
-                client.publish("/iotdata", message);
+                client.publish("/iotdata/temperature", message);
 
                 Thread.sleep(2000);
 

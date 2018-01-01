@@ -199,9 +199,9 @@ public class GraphPersistence extends SQLiteOpenHelper implements BaseColumns {
             values.put(COLUMN_MIN_X, "0");
         }
         if (graph.getMaxX() != null) {
-            values.put(COLUMN_MAX_X, "0");
+            values.put(COLUMN_MAX_X, getTimestampAsString(graph.getMaxX()));
         } else {
-
+            values.put(COLUMN_MAX_X, "0");
         }
         values.put(COLUMN_MIN_Y, graph.getMinY());
         values.put(COLUMN_MAX_Y, graph.getMaxY());

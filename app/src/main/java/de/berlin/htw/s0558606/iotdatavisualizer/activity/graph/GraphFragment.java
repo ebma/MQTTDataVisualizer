@@ -47,6 +47,8 @@ public class GraphFragment extends Fragment {
     private ListView listView;
     private GraphListViewAdapter graphListViewAdapter;
 
+    private IReceivedMessageListener listener;
+
     public GraphFragment() {
         // Required empty public constructor
     }
@@ -63,13 +65,13 @@ public class GraphFragment extends Fragment {
         System.out.println("Graph Fragment: " + connection.getId());
         setHasOptionsMenu(true);
         messages = connection.getMessages();
-        connection.addReceivedMessageListener(new IReceivedMessageListener() {
+
+        listener = new IReceivedMessageListener() {
             @Override
             public void onMessageReceived(ReceivedMessage message) {
                 updateGraph(message);
             }
-        });
-
+        };
 
         try {
             graphList = connection.getGraphPersistence().restoreGraphs();
@@ -86,9 +88,6 @@ public class GraphFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_graph, container, false);
-
-        //GraphView graphView = (GraphView) rootView.findViewById(R.id.graph);
-
 
         listView = rootView.findViewById(R.id.graph_list_view);
         // create listviewadapter
@@ -111,13 +110,27 @@ public class GraphFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        connection.addReceivedMessageListener(listener);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        connection.removeReceivedMessageListener(listener);
+    }
+
     public void updateGraph(ReceivedMessage message) {
         for (Graph graph : graphList) {
             if (graph.getGraphTopic().equals(message.getTopic())) {
                 PersistedMessage pMessage = PersistedMessage.convertToPersistedMessage(message);
                 double value = Double.parseDouble(pMessage.getMessage());
 
-                graph.getLineGraphSeries().appendData(new DataPoint(pMessage.getTimestamp(), value), true, Graph.MAX_DATA_POINTS);
+                graph.getLineGraphSeries().appendData(new DataPoint(pMessage.getTimestamp(), value), false, Graph.MAX_DATA_POINTS);
             }
         }
         graphListViewAdapter.notifyDataSetChanged();

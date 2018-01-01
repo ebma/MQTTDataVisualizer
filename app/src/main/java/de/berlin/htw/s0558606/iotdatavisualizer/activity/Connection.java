@@ -478,7 +478,12 @@ public class Connection {
     }
 
     public void addReceivedMessageListener(IReceivedMessageListener listener) {
-        receivedMessageListeners.add(listener);
+
+        System.out.println("Listener hinzugefuegt" + receivedMessageListeners.add(listener));
+    }
+
+    public void removeReceivedMessageListener(IReceivedMessageListener listener) {
+        System.out.println("Listener entfernt" + receivedMessageListeners.remove(listener));
     }
 
     public void messageArrived(String topic, MqttMessage message) {
