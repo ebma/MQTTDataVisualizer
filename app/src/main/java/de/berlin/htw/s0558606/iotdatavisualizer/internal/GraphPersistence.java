@@ -294,7 +294,7 @@ public class GraphPersistence extends SQLiteOpenHelper implements BaseColumns {
      * @param graph The graph to delete from the database
      */
     public void deleteGraph(Graph graph) {
-        Log.d(TAG, "Deleting Subscription: " + graph.toString());
+        Log.d(TAG, "Deleting Graph: " + graph.toString());
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TABLE_GRAPHS, _ID + "=?", new String[]{String.valueOf(graph.getPersistenceId())});
         db.close();
