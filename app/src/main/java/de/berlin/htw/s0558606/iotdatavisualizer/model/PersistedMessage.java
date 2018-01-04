@@ -82,6 +82,20 @@ public class PersistedMessage {
         return result;
     }
 
+
+    public double getValueFromMessage(){
+        double value = 0;
+        if (getMessage().split(" ").length > 1){
+            value = Double.parseDouble(getMessage().split(" ")[1]);
+        } else if (getMessage().split(" ").length == 1) {
+            value = Double.parseDouble(getMessage());
+        } else {
+            System.err.println("getValueFromMessage() failed ");
+        }
+
+        return value;
+    }
+
     @Override
     public String toString() {
         return "ReceivedMessage{" +

@@ -157,7 +157,7 @@ public class DetailedGraphFragment extends Fragment {
     public void updateGraph(ReceivedMessage message) {
         if (graph.getGraphTopic().equals(message.getTopic())) {
             PersistedMessage pMessage = PersistedMessage.convertToPersistedMessage(message);
-            double value = Double.parseDouble(pMessage.getMessage());
+            double value = pMessage.getValueFromMessage();
 
             graph.getLineGraphSeries().appendData(new DataPoint(pMessage.getTimestamp(), value), false, Graph.MAX_DATA_POINTS);
         }

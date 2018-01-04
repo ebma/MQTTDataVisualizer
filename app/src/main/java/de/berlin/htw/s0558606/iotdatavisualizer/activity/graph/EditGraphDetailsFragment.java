@@ -116,11 +116,13 @@ public class EditGraphDetailsFragment extends Fragment {
         maxXDate.setOnClickListener(clickListener);
         maxXTime.setOnClickListener(clickListener);
 
-        populateFromGraph(graph);
 
         formModel = new GraphModel();
 
         setFormItemListeners();
+        populateFromGraph(graph);
+
+
 
 
         // Inflate the layout for this fragment
@@ -265,6 +267,9 @@ public class EditGraphDetailsFragment extends Fragment {
         if (maxY.getText().toString().length() > 0)
             graph.setMaxY(Double.parseDouble(maxY.getText().toString()));
 
+        graph.setGraphName(formModel.getGraphName().trim());
+        graph.setGraphTopic(formModel.getGraphTopic().trim());
+        graph.setyAxisDescription(formModel.getyAxisDescription().trim());
 
         connection.getGraphPersistence().updateGraph(graph);
 
