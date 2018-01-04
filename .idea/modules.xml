@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/IoTDataVisualizer.iml" filepath="$PROJECT_DIR$/IoTDataVisualizer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MQTTDataVisualizer.iml" filepath="$PROJECT_DIR$/MQTTDataVisualizer.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

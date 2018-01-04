@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="56dp"
     android:orientation="vertical"
-    tools:context="de.berlin.htw.s0558606.iotdatavisualizer.activity.PublishFragment">
+    tools:context="de.berlin.htw.s0558606.mqttdatavisualizer.activity.PublishFragment">
 
 
     <LinearLayout

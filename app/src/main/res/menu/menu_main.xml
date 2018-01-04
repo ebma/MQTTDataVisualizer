@@ -1,4 +1,4 @@
 <menu xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activity.MainActivity">
+    tools:context="de.berlin.htw.s0558606.mqttdatavisualizer.activity.MainActivity">
 </menu>
 
