@@ -41,8 +41,8 @@ public class MQTTMessageGenerator implements MqttCallback {
             while (true) {
                 MqttMessage message = new MqttMessage();
                 double number = random.nextDouble() * 20 - 10;
-                message.setPayload(("/iotdata/kitchen/humidity " + Double.toString(number)).getBytes());
-                client.publish("/iotdata/kitchen/humidity", message);
+                message.setPayload(("/iotdata/kitchen/temperature " + Double.toString(number)).getBytes());
+                client.publish("/iotdata/kitchen/temperature", message);
 
                 Thread.sleep(2000);
 

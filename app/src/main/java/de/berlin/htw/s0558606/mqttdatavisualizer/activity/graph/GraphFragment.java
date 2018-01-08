@@ -154,7 +154,7 @@ public class GraphFragment extends Fragment {
         if (messageList != null) {
             for (PersistedMessage message : messageList) {
                 try {
-                    double value = Double.parseDouble(message.getMessage());
+                    double value = message.getValueFromMessage();
                     DataPoint dataPoint = new DataPoint(message.getTimestamp(), value);
 
                     series.appendData(dataPoint, true, Graph.MAX_DATA_POINTS);
